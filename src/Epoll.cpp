@@ -11,7 +11,9 @@ int cbHead = 0;
 
 void Loop::run() {
     timepoint = std::chrono::system_clock::now();
-    while (numPolls) {
+    // todo: keep run(), add step(), so this is while (numPolls) { step(); }
+    //while (numPolls)
+    {
         for (std::pair<Poll *, void (*)(Poll *)> c : closing) {
             numPolls--;
 
@@ -24,7 +26,7 @@ void Loop::run() {
         }
         closing.clear();
 
-        int numFdReady = epoll_wait(epfd, readyEvents, 1024, delay);
+        int numFdReady = epoll_wait(epfd, readyEvents, 1024, /*delay*/0); // delay is -1 in Epoll.h, need 0 for non-blocking
         timepoint = std::chrono::system_clock::now();
 
         if (preCb) {
