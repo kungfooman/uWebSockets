@@ -2,7 +2,17 @@
 #include <stdio.h>
 #include "uWS.h"
 
-#define CCALL extern "C"
+#ifdef __cplusplus
+#	define EXTERNC extern "C"
+#else
+#	define EXTERNC extern
+#endif
+
+#if defined(_MSC_VER) || defined(__MINGW32__)
+#	define CCALL EXTERNC __declspec(dllexport)
+#else
+#	define CCALL EXTERNC __attribute__((visibility("default")))
+#endif
 
 CCALL void *uws_new_hub() {
     return (void *)new uWS::Hub();
@@ -29,17 +39,17 @@ CCALL void uws_hub_step(void *hub) {
 }
 
 // example code
-#if 0
+#if 1
 
 void uws_msg_handler(void *server, char *msg, size_t len, int op) {
-    //printf("connect length=%z opCode=%d\n", len, op);
+    printf("connect length=%z opCode=%d\n", len, op);
     for (int i=0; i<len; i++)
         printf("%c", msg[i]);
     printf("\n");
     uws_server_send(server, msg, len, op);
-    //uws_server_send(server, "LOL", 3, op);
-    //uws_server_send(server, "LOL", 3, op);
-    //uws_server_send(server, "LOL", 3, op);
+    uws_server_send(server, "LOL", 3, op);
+    uws_server_send(server, "LOL", 3, op);
+    uws_server_send(server, "LOL", 3, op);
 }
 
 int main() {

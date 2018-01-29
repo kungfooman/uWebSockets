@@ -1,5 +1,9 @@
 #include "Socket.h"
 
+#if defined(__MINGW32__)
+#include "inet_ntop.c"
+#endif
+
 namespace uS {
 
 Socket::Address Socket::getAddress()

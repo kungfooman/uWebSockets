@@ -22,7 +22,8 @@ struct Loop : uv_loop_t {
     }
 
     void run() {
-        uv_run(this, UV_RUN_DEFAULT);
+        //uv_run(this, UV_RUN_DEFAULT);
+        uv_run(this, UV_RUN_NOWAIT); // todo like in epoll: split for run/step functions
     }
 };
 
